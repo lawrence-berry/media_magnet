@@ -1,0 +1,2 @@
+inherit_from:
+  - https://raw.githubusercontent.com/geome/geo_me-rubocop/master/.rubocop.yml
