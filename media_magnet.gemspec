@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["lawrence.berry@gmail.com"]
 
   spec.summary       = "Provides access to various resources from social media"
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/lawrence-berry/media_magnet"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
   # Specify which files should be added to the gem when it is released.
