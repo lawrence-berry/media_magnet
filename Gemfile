@@ -5,4 +5,9 @@ gemspec
 
 gem "rake", "~> 12.0"
 gem "rspec", "~> 3.0"
-gem "pry"
+gem "nokogiri"
+
+group :development, :test do
+  gem "pry"
+  gem "webmock"
+end

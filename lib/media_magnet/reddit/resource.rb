@@ -1,2 +1,0 @@
-
-# formerly image_url

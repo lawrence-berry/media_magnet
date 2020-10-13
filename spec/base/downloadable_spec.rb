@@ -1,4 +1,11 @@
 RSpec.describe MediaMagnet::Base::Downloadable do
+  before do
+    WebMock.disable!
+  end
+
+  after do
+    WebMock.enable!
+  end
 
   class TestClass
     include MediaMagnet::Base::Downloadable
