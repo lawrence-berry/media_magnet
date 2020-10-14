@@ -3,7 +3,7 @@ module MediaMagnet
     class Reddit
       class Image
 
-        def initialize(data)
+        def initialize(data: , opts: {})
           @data = data
         end
 

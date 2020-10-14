@@ -14,6 +14,7 @@ RSpec.describe MediaMagnet::Base::Downloadable do
       @url = url
       @dir = dir
       @local_name = local_name
+      @no_sleep = true
     end
   end
 

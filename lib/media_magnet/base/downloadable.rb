@@ -9,6 +9,8 @@ module MediaMagnet
         setup
         puts "Downloading #{@url} ... to #{path}"
         write
+        rate_limit
+        @output
       end
 
       def path
@@ -27,12 +29,17 @@ module MediaMagnet
         @local_name = @local_name || remote_name || tempoary_filename
       end
 
+      def rate_limit
+        return if @no_sleep
+        fail "No @sleep_time specified" unless @sleep_time
+        sleep @sleep_time
+      end
       def tempoary_filename
         Dir::Tmpname.create(["download-"], @dir) {}.split("/").last
       end
 
       def write
-        open(path, "wb") do |f|
+        @output = open(path, "wb") do |f|
           f << URI.open(@url, "User-Agent" => UserAgent.random).read
         end
       end

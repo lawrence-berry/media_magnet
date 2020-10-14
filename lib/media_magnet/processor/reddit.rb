@@ -5,16 +5,18 @@ require "json"
 module MediaMagnet
   module Processor
     class Reddit
-      DOWNLOAD_PATH = "#{ENV['HOME']}/Pictures/Wallpaper/images/2020/" \
-      "5_reddit_lockdown/"
+      DEFAULT_DOWNLOAD_PATH = MediaMagnet::Base::Downloadable::DEFAULT_DOWNLOAD_DIR
       BASE_URL = "https://www.reddit.com/r/"
+      SLEEP_TIME = 0.1 # Prev. 30.0
       MAX_RESULTS = 20
 
-      def initialize(subreddits)
+      def initialize(subreddits:, downloading: false, path: nil)
+        @downloading = downloading
         @subreddits = subreddits
+        @path = path
         @targets ||= @subreddits.map do |t|
           { 
-            folder: "#{DOWNLOAD_PATH}#{t}",
+            folder: "#{download_path}#{t}",
             url: "#{BASE_URL}#{t}/top.json?limit=#{MAX_RESULTS}"
           }
         end
@@ -22,32 +24,49 @@ module MediaMagnet
 
       def call
         prepare_folders
-        # result = @targets.map { |s| process(s[:url], s[:folder]) }
         process
         @results[0]
       end
 
-      # private 
+      private 
 
-      # TODO: Error handling, optional downloading, sleeps
+      def download_path
+        @path || DEFAULT_DOWNLOAD_PATH
+      end
+
+      # TODO: Error handling
       def process
         @results = @targets.map do |target|
           doc = doc_from target[:url]
           JSON.parse(doc)["data"]["children"].map do |c|
-            result = MediaMagnet::Parser::Reddit::Image.new(c["data"])
+            result = image_parser(c)
             next unless result.valid?
+            result.download if @downloading
             result.to_h
           end.compact.reject { |r| r[:url].nil? }
         end
       end
 
-      def doc_from(url)
-        @doc ||= Nokogiri::HTML(URI.open(url, "User-Agent" => UserAgent.random))
+      def image_parser(c)
+        if @downloading
+          MediaMagnet::Parser::Reddit::DownloadableImage
+            .new(data: c["data"], opts: {dir: download_path, sleep_time: SLEEP_TIME})
+        else
+          MediaMagnet::Parser::Reddit::Image.new(data: c["data"])
+        end
       end
 
-      # TODO: Move to downloadable?
+      def doc_from(url)
+        contents = URI.open(url, "User-Agent" => UserAgent.random)
+        @doc ||= Nokogiri::HTML(contents)
+      rescue StandardError
+        fail "Could not fetch subreddit via #{url}"
+        {}
+      end
+
       def prepare_folders
-        fail "#{DOWNLOAD_PATH} does not exist" unless File.directory?(DOWNLOAD_PATH)
+        return unless @downloading
+        fail "#{download_path} does not exist" unless File.directory?(download_path)
         @targets.map do |url|
           `mkdir -p #{url[:folder]}` unless File.directory?(url[:folder])
         end
