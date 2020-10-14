@@ -15,7 +15,7 @@ module MediaMagnet
         @subreddits = subreddits
         @path = path
         @targets ||= @subreddits.map do |t|
-          { 
+          {
             folder: "#{download_path}#{t}",
             url: "#{BASE_URL}#{t}/top.json?limit=#{MAX_RESULTS}"
           }
@@ -34,7 +34,6 @@ module MediaMagnet
         @path || DEFAULT_DOWNLOAD_PATH
       end
 
-      # TODO: Error handling
       def process
         @results = @targets.map do |target|
           doc = doc_from target[:url]
@@ -61,7 +60,6 @@ module MediaMagnet
         @doc ||= Nokogiri::HTML(contents)
       rescue StandardError
         fail "Could not fetch subreddit via #{url}"
-        {}
       end
 
       def prepare_folders
