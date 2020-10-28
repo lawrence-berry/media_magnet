@@ -8,7 +8,12 @@ module MediaMagnet
         end
 
         def to_h
-          { name: filename, url: url }
+          h = {
+            name: filename,
+            url: url
+          }
+          h[:youtube_id] = youtube_id if youtube_id
+          h
         end
 
         def valid?
@@ -17,8 +22,12 @@ module MediaMagnet
 
         private
 
+        def youtube_id
+          MediaMagnet::Mediums::YoutubeUrl.new(url, "", "").youtube_id
+        end
+
         def url
-          @data["url"]
+          URI.decode(@data["url"])
         end
 
         def remote_name

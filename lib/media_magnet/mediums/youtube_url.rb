@@ -5,7 +5,7 @@ module MediaMagnet
       # include MediaMagnet::Base::Downloadable
       
       def initialize(url, dir, filename)
-        @url = url
+        @url = URI.decode(url)
         @dir = dir
         @local_name = filename
       end
@@ -29,9 +29,10 @@ module MediaMagnet
       end
       
       def youtube_id
+        return unless @url.match(/.*\/youtu\.be|youtube\.com\/(.*)$/)
         match = @url.match(/.*watch\?v=(.*)$/)
         if match && match.length > 0
-          match[1].split("&")[0]
+          return match[1].split("&")[0]
         end
         match = @url.match(/.*\/youtu\.be|youtube\.com\/(.*)$/)
         if match && match.length > 0

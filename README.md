@@ -4,6 +4,11 @@ Welcome to your new gem! In this directory, you'll find the files you need to be
 
 TODO: Delete this and the text above, and describe your gem
 
+## NEXT
+
+* Get list of tracks for a given artist
+* rename artistExtractor -> song
+
 ## Installation
 
 Add this line to your application's Gemfile:
