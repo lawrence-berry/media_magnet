@@ -20,7 +20,7 @@ module MediaMagnet
 
       def self.alt_music_subs
         %w{
-          breakbeat happyhardcore trance dnb darkstep
+          90srock 90salternative breakbeat happyhardcore trance dnb darkstep
           breakcore electrohouse house psytrance futurebeats
           gamemusic fidget electronicjazz
           jazznoir vaporwave shoegaze SilkySmoothMusic listentous outrun
