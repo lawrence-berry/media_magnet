@@ -10,8 +10,8 @@ module MediaMagnet
         @local_name = filename
       end
 
-      def fetch
-        return if invalid?
+      def to_h
+        return unless valid?
         {
           name: name,
           url: url,
@@ -20,8 +20,13 @@ module MediaMagnet
         }
       end
 
-      def invalid?
-        !valid_url? || previous_download
+      def url
+        @url
+      end
+
+      def valid?
+        
+        valid_url? && !previous_download?
       end
       
       def name
@@ -34,15 +39,21 @@ module MediaMagnet
         if match && match.length > 0
           return match[1].split("&")[0]
         end
+        uri = URI.parse(@url)
+        match = uri.host == "youtu.be" && uri.path
+        if match && match.length > 0
+          return match.split("&")[0]
+        end
         match = @url.match(/.*\/youtu\.be|youtube\.com\/(.*)$/)
         if match && match.length > 0
-          @url.split("/").last.split("&")[0]
+          match[1].split("/").last.split("&")[0]
         end
       end
 
       private
 
       def previous_download?
+        return false unless @path
         File.exist?(@path) || File.exist?(error_path) || pre_existing_file?
       end
 

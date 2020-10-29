@@ -17,7 +17,7 @@ module MediaMagnet
         @targets ||= @subreddits.map do |t|
           {
             folder: "#{download_path}#{t}",
-            url: "#{BASE_URL}#{t}/top.json?limit=#{MAX_RESULTS}"
+            url: "#{BASE_URL}#{t}.json?limit=#{MAX_RESULTS}"
           }
         end
       end
@@ -38,7 +38,7 @@ module MediaMagnet
         @results = @targets.map do |target|
           doc = doc_from target[:url]
           JSON.parse(doc)["data"]["children"].map do |c|
-            result = image_parser(c)
+            result = parser(c)
             next unless result.valid?
             result.download if @downloading
             result.to_h
@@ -46,7 +46,9 @@ module MediaMagnet
         end
       end
 
-      def image_parser(c)
+      def parser(c)
+        ut = MediaMagnet::Mediums::YoutubeUrl.new(c["data"]["url"], nil, c["data"]["title"])
+        return ut if ut.valid?
         if @downloading
           MediaMagnet::Parser::Reddit::DownloadableImage
             .new(data: c["data"], opts: {dir: download_path, sleep_time: SLEEP_TIME})
