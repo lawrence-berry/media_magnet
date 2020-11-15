@@ -1,17 +1,19 @@
 RSpec.describe MediaMagnet::Processor::Reddit do
 
   let(:subreddits) { ["VillagePorn"] }
+  let(:opts) { { max_results: 2, path: path } }
+  let(:path) { nil }
   let(:response) {
     File.open("spec/support/responses/reddit/processor/valid.html").read
   }
 
   before do
-    stub_request(:get, "https://www.reddit.com/r/VillagePorn/top.json?limit=20")
+    stub_request(:get, "https://www.reddit.com/r/VillagePorn.json?limit=2")
       .to_return(status: 200, body: response)
   end
 
   subject {
-    described_class.new(subreddits: subreddits)
+    described_class.new(subreddits: subreddits, downloading: false, opts: opts)
   }
 
   describe "::call" do
@@ -24,7 +26,7 @@ RSpec.describe MediaMagnet::Processor::Reddit do
     let(:subreddits) { ["0"] }
 
     before do
-      stub_request(:get, "https://www.reddit.com/r/0/top.json?limit=20")
+      stub_request(:get, "https://www.reddit.com/r/0.json?limit=2")
         .to_return(status: 404, body: {message: "Not Found", error: 404}.to_json)
     end
 
@@ -53,7 +55,7 @@ RSpec.describe MediaMagnet::Processor::Reddit do
     }
 
     subject {
-      described_class.new(subreddits: subreddits, downloading: true, path: path)
+      described_class.new(subreddits: subreddits, downloading: true, opts: opts)
     }
 
     describe "::call" do

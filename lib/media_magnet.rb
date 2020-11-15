@@ -11,6 +11,8 @@ require "media_magnet/collections/reddit"
 require "media_magnet/parser/reddit/image"
 require "media_magnet/parser/reddit/downloadable_image"
 
+require "pry"
+
 module MediaMagnet
   class Error < StandardError; end
   # Your code goes here...

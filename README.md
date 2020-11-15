@@ -8,6 +8,7 @@ TODO: Delete this and the text above, and describe your gem
 
 * Get list of tracks for a given artist
 * rename artistExtractor -> song
+* Top mode? Significantly less results but better quality
 
 ## Installation
 

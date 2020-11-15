@@ -8,12 +8,10 @@ module MediaMagnet
         end
 
         def to_h
-          h = {
+          {
             name: filename,
             url: url
           }
-          h[:youtube_id] = youtube_id if youtube_id
-          h
         end
 
         def valid?

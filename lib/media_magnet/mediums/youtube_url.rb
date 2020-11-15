@@ -25,7 +25,6 @@ module MediaMagnet
       end
 
       def valid?
-        
         valid_url? && !previous_download?
       end
       
@@ -40,7 +39,7 @@ module MediaMagnet
           return match[1].split("&")[0]
         end
         uri = URI.parse(@url)
-        match = uri.host == "youtu.be" && uri.path
+        match = uri.host == "youtu.be" && uri.path.gsub("/", "")
         if match && match.length > 0
           return match.split("&")[0]
         end

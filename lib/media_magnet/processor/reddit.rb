@@ -10,14 +10,12 @@ module MediaMagnet
       SLEEP_TIME = 0.1 # Prev. 30.0
       MAX_RESULTS = 20
 
-      def initialize(subreddits:, downloading: false, path: nil)
-        @downloading = downloading
-        @subreddits = subreddits
-        @path = path
+      def initialize(subreddits:, downloading: false, opts: {})
+        @downloading, @subreddits, @opts = downloading, subreddits, opts
         @targets ||= @subreddits.map do |t|
           {
             folder: "#{download_path}#{t}",
-            url: "#{BASE_URL}#{t}.json?limit=#{MAX_RESULTS}"
+            url: "#{BASE_URL}#{t}.json?limit=#{max_results}"
           }
         end
       end
@@ -30,8 +28,12 @@ module MediaMagnet
 
       private 
 
+      def max_results
+        @opts[:max_results] || MAX_RESULTS 
+      end
+
       def download_path
-        @path || DEFAULT_DOWNLOAD_PATH
+        @opts[:path] || DEFAULT_DOWNLOAD_PATH
       end
 
       def process
