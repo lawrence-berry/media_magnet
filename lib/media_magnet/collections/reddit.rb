@@ -18,8 +18,10 @@ module MediaMagnet
         %w{breakbeat dubstep idm dnb minimal futurebeats fidget}
       end
 
+      # https://www.reddit.com/r/Music/wiki/musicsubreddits#wiki_electronic_music
       def self.alt_music_subs
         %w{
+          turntablists cxd LiquidDubstep witch_house theOverload boogiemusic
           90srock 90salternative breakbeat happyhardcore trance dnb darkstep
           breakcore electrohouse house psytrance futurebeats
           gamemusic fidget electronicjazz

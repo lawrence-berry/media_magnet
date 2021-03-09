@@ -25,7 +25,7 @@ module MediaMagnet
       end
 
       def valid?
-        valid_url? && !previous_download?
+        valid_url? && !previous_download? && youtube_id
       end
       
       def name
