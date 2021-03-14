@@ -7,7 +7,7 @@ module MediaMagnet
     class Reddit
       DEFAULT_DOWNLOAD_PATH = MediaMagnet::Base::Downloadable::DEFAULT_DOWNLOAD_DIR
       BASE_URL = "https://www.reddit.com/r/"
-      SLEEP_TIME = 0.1 # Prev. 30.0
+      SLEEP_TIME = 0.1
       MAX_RESULTS = 20
 
       def initialize(subreddits:, downloading: false, opts: {})

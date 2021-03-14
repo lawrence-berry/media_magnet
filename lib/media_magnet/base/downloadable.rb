@@ -1,4 +1,5 @@
 require "open-uri"
+require "pry"
 
 module MediaMagnet
   module Base
@@ -6,7 +7,7 @@ module MediaMagnet
       DEFAULT_DOWNLOAD_DIR = "/tmp/downloads"
 
       def download
-        setup
+        configure
         puts "Downloading #{@url} ... to #{path}"
         write
         rate_limit
@@ -20,13 +21,22 @@ module MediaMagnet
       private
 
       # TODO: Mutating ivars
-      def setup
+      def configure
         @url = URI.parse(@url.chomp("/"))
         fail(ArgumentError, "Invalid url") unless
           ["URI::HTTP", "URI::HTTPS"].include?(@url.class.to_s)
         @dir ||= DEFAULT_DOWNLOAD_DIR
         Dir.mkdir(@dir) unless Dir.exist?(@dir)
-        @local_name = @local_name || remote_name || tempoary_filename
+        @local_name = local_name_with_ext || remote_name || tempoary_filename
+      end
+
+      def local_name_with_ext
+        return unless @local_name
+        "#{@local_name}.#{remote_extension}"
+      end
+
+      def remote_extension
+        remote_name.split(".").last
       end
 
       def rate_limit
@@ -34,6 +44,7 @@ module MediaMagnet
         fail "No @sleep_time specified" unless @sleep_time
         sleep @sleep_time
       end
+
       def tempoary_filename
         Dir::Tmpname.create(["download-"], @dir) {}.split("/").last
       end

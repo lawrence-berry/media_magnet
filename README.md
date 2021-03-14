@@ -1,8 +1,6 @@
 # MediaMagnet
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/media_magnet`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Unified interface to access content from a variety of social media sites.
 
 ## NEXT
 
@@ -15,7 +13,8 @@ TODO: Delete this and the text above, and describe your gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'media_magnet'
+gem 'media_magnet', git: 'git://github.com/lawrence-berry/media_magnet.git', branch: 'master'
+
 ```
 
 And then execute:
@@ -25,6 +24,10 @@ And then execute:
 Or install it yourself as:
 
     $ gem install media_magnet
+
+During development, access a console via:
+
+    $ bundle console
 
 ## Usage
 

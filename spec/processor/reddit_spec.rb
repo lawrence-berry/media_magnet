@@ -7,39 +7,41 @@ RSpec.describe MediaMagnet::Processor::Reddit do
     File.open("spec/support/responses/reddit/processor/valid.html").read
   }
 
-  before do
-    stub_request(:get, "https://www.reddit.com/r/VillagePorn.json?limit=2")
-      .to_return(status: 200, body: response)
-  end
-
-  subject {
-    described_class.new(subreddits: subreddits, downloading: false, opts: opts)
-  }
-
-  describe "::call" do
-    it "returns images posted the subreddit" do
-      expect(subject.call.length).to eq(3)
-    end
-  end
-
-  describe "when requesting a non-existant subreddit" do
-    let(:subreddits) { ["0"] }
-
+  describe "when stubbing net requests" do
     before do
-      stub_request(:get, "https://www.reddit.com/r/0.json?limit=2")
-        .to_return(status: 404, body: {message: "Not Found", error: 404}.to_json)
+      stub_request(:get, "https://www.reddit.com/r/VillagePorn.json?limit=2")
+        .to_return(status: 200, body: response)
     end
+
+    subject {
+      described_class.new(subreddits: subreddits, downloading: false, opts: opts)
+    }
 
     describe "::call" do
-      it "Raises an error" do
-        expect {subject.call.length }.to raise_error(RuntimeError)
+      it "returns images posted the subreddit" do
+        expect(subject.call.length).to eq(3)
+      end
+    end
+
+    describe "when requesting a non-existant subreddit" do
+      let(:subreddits) { ["0"] }
+
+      before do
+        stub_request(:get, "https://www.reddit.com/r/0.json?limit=2")
+          .to_return(status: 404, body: {message: "Not Found", error: 404}.to_json)
+      end
+
+      describe "::call" do
+        it "Raises an error" do
+          expect {subject.call.length }.to raise_error(RuntimeError)
+        end
       end
     end
   end
 
   describe "when allowing net requests" do
 
-    # TODO: Stub
+    # TODO:De-Stub
     before do
       `mkdir #{path}`
       WebMock.disable!
@@ -51,7 +53,7 @@ RSpec.describe MediaMagnet::Processor::Reddit do
     end
 
     let(:path) {
-      "#{described_class::DEFAULT_DOWNLOAD_PATH}/media_magnet"
+      "#{described_class::DEFAULT_DOWNLOAD_PATH}/media_magnet/"
     }
 
     subject {
@@ -59,8 +61,10 @@ RSpec.describe MediaMagnet::Processor::Reddit do
     }
 
     describe "::call" do
-      it "returns images posted the subreddit" do
-        expect(subject.call.length).to be > 0
+      it "downloads and returns images posted the subreddit" do
+        result = subject.call
+        expect(Dir["#{path}**/*"].length).to be > 0
+        expect(result.length).to be > 0
       end
     end
   end

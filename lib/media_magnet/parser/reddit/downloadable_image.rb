@@ -4,7 +4,7 @@ module MediaMagnet
       class DownloadableImage < MediaMagnet::Parser::Reddit::Image
         include MediaMagnet::Base::Downloadable
 
-        def initialize(data: , opts: {})
+        def initialize(data:, opts: {})
           super
           @url = url
           @dir = opts[:dir]
