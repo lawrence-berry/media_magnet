@@ -9,7 +9,7 @@ module MediaMagnet
           @url = url
           @dir = opts[:dir]
           @local_name = filename
-          # @no_sleep = true unless @sleep_time
+          @no_sleep = true unless opts[:sleep_time]
           @sleep_time = opts[:sleep_time]
         end
       end 

@@ -32,7 +32,7 @@ module MediaMagnet
 
       def local_name_with_ext
         return unless @local_name
-        "#{@local_name}.#{remote_extension}"
+        "#{@local_name[0..254]}.#{remote_extension}"
       end
 
       def remote_extension

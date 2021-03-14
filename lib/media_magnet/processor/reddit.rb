@@ -39,7 +39,6 @@ module MediaMagnet
       def process
         @results = @targets.map do |target|
           doc = doc_from target[:url]
-          
           JSON.parse(doc)["data"]["children"].map do |c|
             result = parser(c, target)
             next unless result.valid?
