@@ -26,10 +26,10 @@ module MediaMagnet
         @results[0]
       end
 
-      private 
+      private
 
       def max_results
-        @opts[:max_results] || MAX_RESULTS 
+        @opts[:max_results] || MAX_RESULTS
       end
 
       def download_path
@@ -39,21 +39,23 @@ module MediaMagnet
       def process
         @results = @targets.map do |target|
           doc = doc_from target[:url]
+          
           JSON.parse(doc)["data"]["children"].map do |c|
-            result = parser(c)
+            result = parser(c, target)
             next unless result.valid?
+            binding.pry
             result.download if @downloading
             result.to_h
           end.compact.reject { |r| r[:url].nil? }
         end
       end
 
-      def parser(c)
+      def parser(c, target)
         ut = MediaMagnet::Mediums::YoutubeUrl.new(c["data"]["url"], nil, c["data"]["title"])
         return ut if ut.valid?
         if @downloading
           MediaMagnet::Parser::Reddit::DownloadableImage
-            .new(data: c["data"], opts: {dir: download_path, sleep_time: SLEEP_TIME})
+            .new(data: c["data"], opts: { dir: target[:folder], sleep_time: SLEEP_TIME })
         else
           MediaMagnet::Parser::Reddit::Image.new(data: c["data"])
         end
@@ -61,9 +63,9 @@ module MediaMagnet
 
       def doc_from(url)
         contents = URI.open(url, "User-Agent" => UserAgent.random)
-        @doc ||= Nokogiri::HTML(contents)
+        @doc = Nokogiri::HTML(contents)
       rescue StandardError
-        fail "Could not fetch subreddit via #{url}"
+        raise "Could not fetch subreddit via #{url}"
       end
 
       def prepare_folders
@@ -73,6 +75,6 @@ module MediaMagnet
           `mkdir -p #{url[:folder]}` unless File.directory?(url[:folder])
         end
       end
-    end 
-  end 
+    end
+  end
 end

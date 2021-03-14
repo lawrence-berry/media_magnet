@@ -3,7 +3,7 @@ module MediaMagnet
     class Reddit
       class Image
 
-        def initialize(data: , opts: {})
+        def initialize(data:, opts: {})
           @data = data
         end
 
@@ -37,7 +37,7 @@ module MediaMagnet
         end
 
         def filename
-          sanitize_filename(@data["title"])
+          sanitize_filename("#{@data['title']}_by_#{@data['author']}")
         end
 
         def sanitize_filename(raw_filename)
