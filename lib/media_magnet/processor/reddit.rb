@@ -43,7 +43,6 @@ module MediaMagnet
           JSON.parse(doc)["data"]["children"].map do |c|
             result = parser(c, target)
             next unless result.valid?
-            binding.pry
             result.download if @downloading
             result.to_h
           end.compact.reject { |r| r[:url].nil? }
@@ -52,7 +51,7 @@ module MediaMagnet
 
       def parser(c, target)
         ut = MediaMagnet::Mediums::YoutubeUrl.new(c["data"]["url"], nil, c["data"]["title"])
-        return ut if ut.valid?
+        return ut if ut.valid? && !@downloading
         if @downloading
           MediaMagnet::Parser::Reddit::DownloadableImage
             .new(data: c["data"], opts: { dir: target[:folder], sleep_time: SLEEP_TIME })

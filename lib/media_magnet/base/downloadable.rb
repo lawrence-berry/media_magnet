@@ -50,6 +50,7 @@ module MediaMagnet
       end
 
       def write
+        puts("Skipping, #{path} exists") and return if File.exist?(path)
         @output = open(path, "wb") do |f|
           f << URI.open(@url, "User-Agent" => UserAgent.random).read
         end
