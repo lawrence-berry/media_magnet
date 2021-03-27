@@ -3,23 +3,24 @@ module MediaMagnet
     class Reddit
       class Image
 
+        VALID_EXTENSIONS = ["jpg", "jpeg", "png"]
+
         def initialize(data:, opts: {})
           @data = data
         end
 
         def to_h
-          {
-            name: filename,
-            url: url
-          }
+          { name: filename, url: url }
         end
 
         def valid?
-          !@data.dig("media_metadata").nil? || !@data.dig("preview").nil?
+          !@data["url"].match(/\/comments\//) &&
+            VALID_EXTENSIONS.include?(extension)
         end
 
         private
 
+        # why is this needed on an image?
         def youtube_id
           MediaMagnet::Mediums::YoutubeUrl.new(url, "", "").youtube_id
         end
