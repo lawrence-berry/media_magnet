@@ -11,7 +11,11 @@ module MediaMagnet
       end
 
       def self.alt_wallpaper_subs
-        %w{BotanicalPorn VillagePorn}
+        %w{
+          SuperRare CryptoArt ImaginarySliceOfLife ImaginaryLandscapes
+          Brutalism SpecArt ImaginaryStarships ImaginaryWastelands
+          ImaginaryArchitecture SciFiArt
+        }
       end
 
       def self.music_subs
