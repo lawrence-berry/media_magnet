@@ -5,6 +5,7 @@ module MediaMagnet
   module Base
     module Downloadable
       DEFAULT_DOWNLOAD_DIR = "/tmp/downloads"
+      MAX_FILENAME_LENGTH = 250
 
       def download
         configure
@@ -32,7 +33,7 @@ module MediaMagnet
 
       def local_name_with_ext
         return unless @local_name
-        "#{@local_name[0..254]}.#{remote_extension}"
+        "#{@local_name[0..MAX_FILENAME_LENGTH]}.#{remote_extension}"
       end
 
       def remote_extension
