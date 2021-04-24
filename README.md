@@ -4,6 +4,8 @@ Unified interface to access content from a variety of social media sites.
 
 ## NEXT
 
+* Reject non-youtube urls - e.g. Soundcloud
+* Thumbnails for images
 * Get list of tracks for a given artist
 * rename artistExtractor -> song
 * Top mode? Significantly less results but better quality

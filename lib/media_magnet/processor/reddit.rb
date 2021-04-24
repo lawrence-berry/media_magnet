@@ -39,8 +39,8 @@ module MediaMagnet
       def process
         @results = @targets.map do |target|
           doc = doc_from target[:url]
-          JSON.parse(doc)["data"]["children"].map do |c|
-            result = parser(c, target)
+          JSON.parse(doc)["data"]["children"].map do |post|
+            result = parser(post, target)
             next unless result.valid?
             result.download if @downloading
             result.to_h
@@ -48,14 +48,14 @@ module MediaMagnet
         end
       end
 
-      def parser(c, target)
-        ut = MediaMagnet::Mediums::YoutubeUrl.new(c["data"]["url"], nil, c["data"]["title"])
+      def parser(post, target)
+        ut = MediaMagnet::Mediums::YoutubeUrl.new(post["data"])
         return ut if ut.valid? && !@downloading
         if @downloading
           MediaMagnet::Parser::Reddit::DownloadableImage
-            .new(data: c["data"], opts: { dir: target[:folder], sleep_time: SLEEP_TIME })
+            .new(data: post["data"], opts: { dir: target[:folder], sleep_time: SLEEP_TIME })
         else
-          MediaMagnet::Parser::Reddit::Image.new(data: c["data"])
+          MediaMagnet::Parser::Reddit::Image.new(data: post["data"])
         end
       end
 
